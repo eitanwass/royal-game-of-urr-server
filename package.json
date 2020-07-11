@@ -1,0 +1,25 @@
+{
+  "name": "royal-game-of-urr-server",
+  "version": "1.0.0",
+  "description": "The server to the game of urr",
+  "main": "server.js",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eitanwass/royal-game-of-urr-server.git"
+  },
+  "author": "stadio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eitanwass/royal-game-of-urr-server/issues"
+  },
+  "homepage": "https://github.com/eitanwass/royal-game-of-urr-server#readme"
+}
