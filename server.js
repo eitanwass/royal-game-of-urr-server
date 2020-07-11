@@ -1,7 +1,7 @@
 const { debug } = require('console');
 const user = require('./user');
 
-var io = require('socket.io')(process.env.PORT || 80)
+var io = require('socket.io')(443)
 
 io.on('connection', (socket) => {
     console.log('Client Connected');
