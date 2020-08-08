@@ -9,15 +9,15 @@ const dbUri = `mongodb+srv://${dbAdminUsername}:${dbAdminPassword}@urr.uguke.mon
 
 const client = new MongoClient(dbUri, { useNewUrlParser: true,
                                         useUnifiedTopology: true });
-const active_users = new Set();
 
 exports.account_actions = (socket) => {
 
-    socket.on('register', (properties) => {    
+    socket.on('register', (properties) => {
+        email = properties['email']
         username = properties['username'];
         password = properties['password'];
 
-        console.log(`Register: username=${username} password=${password}`);
+        console.log(`Register: email=${email} username=${username} password=${password}`);
 
         client.connect( (err) => {
             if (err) {
@@ -25,12 +25,13 @@ exports.account_actions = (socket) => {
             }
 
             const collection = client.db("urr").collection("users");
-            collection.findOne({username: username}).then( (err, result) => {
+            collection.findOne({email: email}).then( (err, result) => {
                 if (err) {
-                    console.log("Register failed. Username already exists.");
-                    socket.emit('register-failed', "Register failed. Username already exists.");
+                    console.log("Register failed. Email already exists.");
+                    socket.emit('register-failed', "Register failed. Email already exists.");
                 } else {
-                    new_user = {username: username,
+                    new_user = {email: email,
+                                username: username,
                                 password: password};
                     collection.insertOne(new_user).then( result => {
                         console.log("Register succeeded on " + utils.get_time());
@@ -47,10 +48,10 @@ exports.account_actions = (socket) => {
     });
     
     socket.on('login', (properties) => {
-        username = properties['username'];
+        email = properties['email'];
         password = properties['password'];
 
-        console.log(`Login: username=${username} password=${password}`);
+        console.log(`Login: email=${email} password=${password}`);
 
         client.connect( (err) => {
             if (err) {
@@ -58,15 +59,15 @@ exports.account_actions = (socket) => {
             }
 
             const collection = client.db("urr").collection("users");
-            const query = {username: username,
+            const query = {email: email,
                             password: password};
             collection.findOne(query).then( (result) => {
                 if (result) {
                     console.log("Login succeeded on " + utils.get_time());
                     socket.emit('login-success', "Login succeeded on " + utils.get_time());
                 } else {
-                    console.log("Login failed. Username or password is incorrect.");
-                    socket.emit('login-failed', "Login failed. Username or password is incorrect.");
+                    console.log("Login failed. Email or password is incorrect.");
+                    socket.emit('login-failed', "Login failed. Email or password is incorrect.");
                 }
             }).catch((err) => {
                 throw err;
@@ -76,10 +77,5 @@ exports.account_actions = (socket) => {
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
-
-        active_users.delete(socket.user);
     })
 }
-
-
-exports.active_users = active_users;
