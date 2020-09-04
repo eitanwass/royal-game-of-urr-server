@@ -1,4 +1,8 @@
-exports.get_time = () => {
+const crypto = require('crypto');
+
+const hashSecret = "VeryComplicatedHashSecret";
+
+exports.getTime = () => {
     let date = new Date();
 
     let hour = date.getHours();
@@ -19,4 +23,8 @@ exports.get_time = () => {
     day = (day < 10 ? "0" : "") + day;
 
     return day + "/" + month + "/" + year + "-" + hour + ":" + min + ":" + sec;
+};
+
+exports.genHash = (data) => {
+    return crypto.createHash('md5').update(data + hashSecret).digest('hex');
 };
