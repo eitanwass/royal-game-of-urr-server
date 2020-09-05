@@ -28,3 +28,7 @@ exports.getTime = () => {
 exports.genHash = (data) => {
     return crypto.createHash('md5').update(data + hashSecret).digest('hex');
 };
+
+exports.simpleShuffle = (arr) => {
+    return (arr.sort(() => Math.random() - 0.5));
+};

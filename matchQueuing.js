@@ -11,7 +11,7 @@ const createMatch = (user0, user1) => {
     let matchName = utils.genHash(user0.username + user1.username);
     let newMatch = new Match.Match(matchName, user0, user1);
     matches.push(newMatch);
-    newMatch.joinMatchRoom();
+    newMatch.gameEvents();
 };
 
 const findQuickMatch = (user) => {
