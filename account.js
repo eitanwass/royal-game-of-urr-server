@@ -12,6 +12,12 @@ const client = new MongoClient(dbUri, { useNewUrlParser: true,
 
 exports.account_actions = (socket) => {
 
+    socket.on('get-avatar', ({email}) => {
+        const avatar = utils.generateUserAvatar(email);
+        
+        socket.emit('avatar-image', 'data:image/png;base64,' + avatar.toString('base64'));
+    });
+
     socket.on('register', (properties) => {
         email = properties['email']
         username = properties['username'];
@@ -34,7 +40,11 @@ exports.account_actions = (socket) => {
                                 username: username,
                                 password: password};
                     collection.insertOne(new_user).then( result => {
+                        const avatar = utils.generateUserAvatar(email);
+
                         console.log("Register succeeded on " + utils.getTime());
+                        
+                        socket.emit('avatar-image', 'data:image/png;base64,' + avatar.toString('base64'));
                         socket.emit('register-success', "Register succeeded on " + utils.getTime());
                     }).catch ((err) => {
                         console.log("Register failed. Something went wrong in insertion of new user: " + err);
