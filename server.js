@@ -1,15 +1,13 @@
 const { debug } = require('console');
-const user = require('./user');
+const account = require('./account');
+const matchQueuing = require('./matchQueuing');
 
-var io = require('socket.io')(443)
-
-io.configure(function () { 
-    io.set("transports", ["xhr-polling"]); 
-    io.set("polling duration", 10); 
-});
+var io = require('socket.io')(80);
 
 io.on('connection', (socket) => {
     console.log('Client Connected');
 
-    user.account_actions(socket);
+    account.account_actions(socket);
+
+    matchQueuing.queuing_actions(socket);
 });

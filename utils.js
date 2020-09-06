@@ -1,4 +1,10 @@
-exports.get_time = () => {
+const crypto = require('crypto');
+const jdenticon = require('jdenticon');
+
+const hashSecret = "VeryComplicatedHashSecret";
+const userIconSize = 128;
+
+exports.getTime = () => {
     let date = new Date();
 
     let hour = date.getHours();
@@ -19,4 +25,16 @@ exports.get_time = () => {
     day = (day < 10 ? "0" : "") + day;
 
     return day + "/" + month + "/" + year + "-" + hour + ":" + min + ":" + sec;
+};
+
+exports.genHash = (data) => {
+    return crypto.createHash('md5').update(data + hashSecret).digest('hex');
+};
+
+exports.simpleShuffle = (arr) => {
+    return (arr.sort(() => Math.random() - 0.5));
+};
+
+exports.generateUserAvatar = (username) => {
+    return jdenticon.toPng(username, userIconSize);
 };
