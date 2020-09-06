@@ -15,12 +15,11 @@ const createMatch = (user0, user1) => {
 };
 
 const findQuickMatch = (user) => {
+    console.log("Joined Queue: " + user.username);
     if (quickMatchQueue.length > 0) {
-        console.log("Found Match for " + user.username);
         let otherUser = quickMatchQueue.pop();
         createMatch(user, otherUser);
     } else {
-        console.log("Joined Queue: " + user.username);
         quickMatchQueue.push(user);
         user.socket.emit('joined-queue');
     }
@@ -28,7 +27,6 @@ const findQuickMatch = (user) => {
 
 exports.queuing_actions = (socket) => {
     socket.on('quick_match', ({username}) => {
-        console.log("Got quickmatch request");
         let user = new User.User(username, socket);
         findQuickMatch(user);
     });

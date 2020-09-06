@@ -21,7 +21,6 @@ class Match {
     };
 
     playerJoined() {
-        console.log("Got new player joined");
         this.playersJoined++;
         if (this.playersJoined == this.players.length) {
             this.informPlayersStatus();
@@ -45,8 +44,6 @@ class Match {
         }
 
         this.players[this.playerTurn].socket.emit('your-turn');
-
-        console.log("Passed turn to " + this.players[this.playerTurn].username);
     }
 
     joinMatchRoom() {
@@ -71,6 +68,14 @@ class Match {
 
         this.user1.socket.on('pass-turn', () => {
             this.passTurn();
+        });
+
+        this.user0.socket.on('move-piece', (properties) => {
+            this.user1.socket.emit('move-piece', properties);
+        });
+
+        this.user1.socket.on('move-piece', (properties) => {
+            this.user0.socket.emit('move-piece', properties);
         });
     }
 }
