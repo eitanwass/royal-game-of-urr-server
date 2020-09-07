@@ -2,7 +2,9 @@ const { debug } = require('console');
 const account = require('./account');
 const matchQueuing = require('./matchQueuing');
 
-var io = require('socket.io')(80);
+const port = process.env.port || 80;
+
+var io = require('socket.io')(port);
 
 io.on('connection', (socket) => {
     console.log('Client Connected');
