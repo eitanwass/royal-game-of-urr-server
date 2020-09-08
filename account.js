@@ -13,12 +13,12 @@ const client = new MongoClient(dbUri, {
     useUnifiedTopology: true
 });
 
-const con = mysql.createConnection({
+const mysqlConfig = {
     host: "sql2.freesqldatabase.com",
     user: "sql2364384",
     password: "lI7!aA7*",
     database: "sql2364384"
-});
+};
 
 exports.account_actions = (socket) => {
 
@@ -29,13 +29,14 @@ exports.account_actions = (socket) => {
 
         console.log(`Register: email=${email} username=${username} password=${password}`);
 
+        const con = mysql.createConnection(mysqlConfig);
         con.connect((err) => {
             if (err) {
                 console.log("An error on connection.");
                 throw err;
             }
 
-            const emailExistsQuery = `SELECT * FROM Users WHERE EMAIL='${email}' LIMIT 1;`;
+            const emailExistsQuery = con.format("SELECT * FROM Users WHERE EMAIL=? LIMIT 1;", [email]);
 
             con.query(emailExistsQuery, (err, result, fields) => {
                 if (err) {
@@ -47,7 +48,7 @@ exports.account_actions = (socket) => {
                     socket.emit('register-failed', "Register failed. Email already exists.");
                     con.end();
                 } else {
-                    const registerInsertQuery = `INSERT INTO Users (EMAIL, USERNAME, PASSWORD) VALUES ('${email}', '${username}', '${password}');`;
+                    const registerInsertQuery = con.format("INSERT INTO Users (EMAIL, USERNAME, PASSWORD) VALUES (?, ?, ?);", [email, username, password]);
 
                     con.query(registerInsertQuery, (err, result) => {
                         if (err) {
@@ -55,7 +56,6 @@ exports.account_actions = (socket) => {
                             throw err;
                         }
                         if (result['affectedRows'] > 0) {
-                            console.log(result);
                             console.log("Register succeeded on " + utils.getTime());
                             socket.emit('register-success', "Register succeeded on " + utils.getTime());
                             con.end();
@@ -76,13 +76,14 @@ exports.account_actions = (socket) => {
 
         console.log(`Login: email=${email} password=${password}`);
 
+        const con = mysql.createConnection(mysqlConfig);
         con.connect((err) => {
             if (err) {
                 console.log("An error on connection.");
                 throw err;
             }
 
-            const loginCheckQuery = `SELECT * FROM Users WHERE EMAIL='${email}' AND PASSWORD='${password}' LIMIT 1;`;
+            const loginCheckQuery = con.format("SELECT * FROM Users WHERE EMAIL=? AND PASSWORD=? LIMIT 1;", [email, password]);
 
             con.query(loginCheckQuery, (err, result, fields) => {
                 if (err) {
@@ -90,7 +91,6 @@ exports.account_actions = (socket) => {
                     throw err;
                 }
                 if (result.length > 0) {
-                    console.log(result);
                     console.log("Login succeeded on " + utils.getTime());
                     socket.emit('login-success', "Login succeeded on " + utils.getTime());
                     con.end();
