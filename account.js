@@ -22,6 +22,12 @@ const mysqlConfig = {
 
 exports.account_actions = (socket) => {
 
+    socket.on('get-avatar', ({email}) => {
+        const avatar = utils.generateUserAvatar(email);
+        
+        socket.emit('avatar-image', 'data:image/png;base64,' + avatar.toString('base64'));
+    });
+
     socket.on('register', (properties) => {
         email = properties['email']
         username = properties['username'];
@@ -56,7 +62,11 @@ exports.account_actions = (socket) => {
                             throw err;
                         }
                         if (result['affectedRows'] > 0) {
+                            const avatar = utils.generateUserAvatar(email);
+                          
                             console.log("Register succeeded on " + utils.getTime());
+                          
+                            socket.emit('avatar-image', 'data:image/png;base64,' + avatar.toString('base64'));
                             socket.emit('register-success', "Register succeeded on " + utils.getTime());
                             con.end();
                         } else {
