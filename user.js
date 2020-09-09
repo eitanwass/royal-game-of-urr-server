@@ -1,5 +1,5 @@
 const utils = require('./utils');
-const {findQuickMatch} = require('./matchQueuing');
+const {findQuickMatch, removeFromQueue} = require('./matchQueuing');
 
 const usernameKey = 'USERNAME';
 const emailKey = 'EMAIL';
@@ -34,13 +34,12 @@ class User {
             this.socket.emit('update-wins-losses', data);
         });
 
-        this.socket.on('quick_match', () => {
+        this.socket.on('quick-match', () => {
             findQuickMatch(this);
         });
-    
-        this.socket.on('ranked_match', () => {
-            // TODO: Add different function to ranked.
-            findQuickMatch(this);
+
+        this.socket.on('cancel-match', () => {
+            removeFromQueue(this);
         });
     }
 }

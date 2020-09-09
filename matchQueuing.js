@@ -30,7 +30,7 @@ const removeFromQueue = (user) => {
 
     if (userIndex != -1) {
         quickMatchQueue.splice(userIndex, 1);
-        console.log("Removed user :" + user.username + " from match queue.");
+        console.log("Removed user '" + user.username + "' from match queue.");
     }
 };
 
