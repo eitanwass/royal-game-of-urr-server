@@ -26,10 +26,11 @@ const findQuickMatch = (user) => {
 };
 
 const removeFromQueue = (user) => {
-    let userIndex = connectedUsers.indexOf(user);
+    let userIndex = quickMatchQueue.indexOf(user);
 
     if (userIndex != -1) {
         quickMatchQueue.splice(userIndex, 1);
+        console.log("Removed user :" + user.username + " from match queue.");
     }
 };
 
