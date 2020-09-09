@@ -10,6 +10,4 @@ io.on('connection', (socket) => {
     console.log('Client Connected');
 
     account.account_actions(socket);
-
-    matchQueuing.queuing_actions(socket);
 });

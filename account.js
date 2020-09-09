@@ -1,17 +1,8 @@
 const mysql = require('mysql');
 const utils = require('./utils');
-const MongoClient = require('mongodb').MongoClient;
+const { User } = require('./user');
 
-const dbName = "Urr";
-const dbAdminUsername = "dbAdmin";
-const dbAdminPassword = "zL56g4Gtghq2kQbb";
-
-const dbUri = `mongodb+srv://${dbAdminUsername}:${dbAdminPassword}@urr.uguke.mongodb.net/${dbName}?retryWrites=true&w=1"`
-
-const client = new MongoClient(dbUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+const connectedUsers = [];
 
 const mysqlConfig = {
     host: "sql2.freesqldatabase.com",
@@ -21,12 +12,6 @@ const mysqlConfig = {
 };
 
 exports.account_actions = (socket) => {
-
-    socket.on('get-avatar', ({email}) => {
-        const avatar = utils.generateUserAvatar(email);
-        
-        socket.emit('avatar-image', 'data:image/png;base64,' + avatar.toString('base64'));
-    });
 
     socket.on('register', (properties) => {
         email = properties['email']
@@ -101,6 +86,9 @@ exports.account_actions = (socket) => {
                     throw err;
                 }
                 if (result.length > 0) {
+                    let newUser = new User(result[0], socket);
+                    connectedUsers.push(newUser);
+
                     console.log("Login succeeded on " + utils.getTime());
                     socket.emit('login-success', "Login succeeded on " + utils.getTime());
                     con.end();
@@ -117,3 +105,6 @@ exports.account_actions = (socket) => {
         console.log('user disconnected');
     });
 };
+
+
+module.exports.connectedUsers = connectedUsers;
