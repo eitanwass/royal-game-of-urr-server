@@ -102,7 +102,18 @@ exports.account_actions = (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log(connectedUsers);
+
+        let disconnectedUser = connectedUsers.find((user) => user.socket == socket);
+        let disconnectedUserIndex = connectedUsers.indexOf(disconnectedUser);
+
+        if (disconnectedUser != null) {
+            console.log('User disconnected: ' + disconnectedUser.username);
+            connectedUsers.splice(disconnectedUserIndex, 1);
+        } else {
+            console.log('user disconnected');
+        }
+        console.log(connectedUsers);
     });
 };
 
