@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const utils = require('./utils');
 const { User } = require('./user');
+const {removeFromQueue} = require('./matchQueuing');
 
 const connectedUsers = [];
 
@@ -102,18 +103,16 @@ exports.account_actions = (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log(connectedUsers);
-
         let disconnectedUser = connectedUsers.find((user) => user.socket == socket);
         let disconnectedUserIndex = connectedUsers.indexOf(disconnectedUser);
 
         if (disconnectedUser != null) {
             console.log('User disconnected: ' + disconnectedUser.username);
             connectedUsers.splice(disconnectedUserIndex, 1);
+            removeFromQueue(disconnectedUser);
         } else {
             console.log('user disconnected');
         }
-        console.log(connectedUsers);
     });
 };
 
