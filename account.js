@@ -1,17 +1,5 @@
 const mysql = require('mysql');
 const utils = require('./utils');
-const MongoClient = require('mongodb').MongoClient;
-
-const dbName = "Urr";
-const dbAdminUsername = "dbAdmin";
-const dbAdminPassword = "zL56g4Gtghq2kQbb";
-
-const dbUri = `mongodb+srv://${dbAdminUsername}:${dbAdminPassword}@urr.uguke.mongodb.net/${dbName}?retryWrites=true&w=1"`
-
-const client = new MongoClient(dbUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
 
 const mysqlConfig = {
     host: "sql2.freesqldatabase.com",
