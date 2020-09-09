@@ -25,15 +25,5 @@ const findQuickMatch = (user) => {
     }
 };
 
-exports.queuing_actions = (socket) => {
-    socket.on('quick_match', ({username}) => {
-        let user = new User.User(username, socket);
-        findQuickMatch(user);
-    });
 
-    socket.on('ranked_match', ({username}) => {
-        let user = new User.User(username, socket);
-        // TODO: Add different function to ranked.
-        findQuickMatch(user);
-    });
-};
+module.exports.findQuickMatch = findQuickMatch;
