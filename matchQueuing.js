@@ -25,5 +25,14 @@ const findQuickMatch = (user) => {
     }
 };
 
+const removeFromQueue = (user) => {
+    let userIndex = connectedUsers.indexOf(user);
+
+    if (userIndex != -1) {
+        quickMatchQueue.splice(userIndex, 1);
+    }
+};
+
 
 module.exports.findQuickMatch = findQuickMatch;
+module.exports.removeFromQueue = removeFromQueue;
