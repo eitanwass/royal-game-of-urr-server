@@ -19,6 +19,13 @@ class User {
         this.userEvents();
     }
 
+    get userData() {
+        return {
+            'username': this.username,
+            'avatar': utils.generateUserAvatar(this.email).toString('base64')
+        }
+    };
+
     userEvents() {
         this.socket.on('get-avatar', () => {
             const avatar = utils.generateUserAvatar(this.email);

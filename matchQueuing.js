@@ -1,4 +1,4 @@
-const Match = require('./match');
+const {Match} = require('./match');
 const User = require('./user');
 const utils = require('./utils');
 
@@ -8,8 +8,10 @@ const matches = [];
 
 const createMatch = (user0, user1) => {
     console.log("New Match for " + user0.username + " and " + user1.username);
+
     let matchName = utils.genHash(user0.username + user1.username);
-    let newMatch = new Match.Match(matchName, user0, user1);
+    let newMatch = new Match(matchName, user0, user1);
+
     matches.push(newMatch);
     newMatch.gameEvents();
 };

@@ -47,8 +47,8 @@ class Match {
     }
 
     joinMatchRoom() {
-        this.user0.socket.emit('found-match', this.user1.username);
-        this.user1.socket.emit('found-match', this.user0.username);
+        this.user0.socket.emit('found-match', this.user1.userData);
+        this.user1.socket.emit('found-match', this.user0.userData);
 
         this.user0.socket.join(this.roomId);
         this.user1.socket.join(this.roomId);
