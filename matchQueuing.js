@@ -10,7 +10,7 @@ const createMatch = (user0, user1) => {
     console.log("New Match for " + user0.username + " and " + user1.username);
 
     let matchName = utils.genHash(user0.username + user1.username);
-    let newMatch = new Match(matchName, user0, user1);
+    let newMatch = new Match(matchName, user0, user1, removeMatch);
 
     matches.push(newMatch);
     newMatch.gameEvents();
@@ -36,6 +36,16 @@ const removeFromQueue = (user) => {
     }
 };
 
+const removeMatch = (match) => {
+    let matchIndex = matches.indexOf(match);
+
+    if (matchIndex != -1) {
+        matches.splice(matchIndex, 1);
+        console.log("Removed match '" + match.roomId + "'");
+    }
+};
+
 
 module.exports.findQuickMatch = findQuickMatch;
 module.exports.removeFromQueue = removeFromQueue;
+module.exports.removeMatch = removeMatch;
