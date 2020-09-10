@@ -87,11 +87,17 @@ exports.account_actions = (socket) => {
                     throw err;
                 }
                 if (result.length > 0) {
+                    let loginTime = utils.getTime();
+
                     let newUser = new User(result[0], socket);
                     connectedUsers.push(newUser);
 
-                    console.log("Login succeeded on " + utils.getTime());
-                    socket.emit('login-success', "Login succeeded on " + utils.getTime());
+                    console.log("Login succeeded on " + loginTime);
+                    let loginInfo = {
+                        'username': newUser.username,
+                        'loginTime': loginTime
+                    };
+                    socket.emit('login-success', loginInfo);
                     con.end();
                 } else {
                     console.log("Login failed. Email or password is incorrect.");
