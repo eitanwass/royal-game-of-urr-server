@@ -62,6 +62,7 @@ class Match {
             this.playerJoined();
         });
 
+
         this.user0.socket.on('pass-turn', () => {
             this.passTurn();
         });
@@ -70,12 +71,22 @@ class Match {
             this.passTurn();
         });
 
+
         this.user0.socket.on('move-piece', (properties) => {
             this.user1.socket.emit('move-piece', properties);
         });
 
         this.user1.socket.on('move-piece', (properties) => {
             this.user0.socket.emit('move-piece', properties);
+        });
+
+
+        this.user0.socket.on('send-message', (properties) => {
+            this.user1.socket.emit('receive-message', properties);
+        });
+
+        this.user1.socket.on('send-message', (properties) => {
+            this.user0.socket.emit('receive-message', properties);
         });
     }
 }
