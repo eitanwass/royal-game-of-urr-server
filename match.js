@@ -1,7 +1,7 @@
 const utils = require('./utils');
 
 class Match {
-    constructor(roomId, user0, user1) {
+    constructor(roomId, user0, user1, onEnd) {
         this.roomId = roomId;
         this.user0 = user0;
         this.user1 = user1;
@@ -10,6 +10,8 @@ class Match {
 
         this.playerTurn = 0;
         this.players = [user0, user1];
+
+        this.onEnd = onEnd;
 
         this.joinMatchRoom();
 
@@ -87,6 +89,19 @@ class Match {
 
         this.user1.socket.on('send-message', (properties) => {
             this.user0.socket.emit('receive-message', properties);
+        });
+
+
+        this.user0.socket.on('exit-match', () => {
+            // Add wins and losses.
+            this.user1.socket.emit('opponent-forfeit');
+            this.onEnd(this);
+        });
+
+        this.user1.socket.on('exit-match', () => {
+            // Add wins and losses.
+            this.user0.socket.emit('opponent-forfeit');
+            this.onEnd(this);
         });
     }
 }
