@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+require('dotenv').config();
 const utils = require('./utils');
 const { User } = require('./user');
 const {removeFromQueue} = require('./matchQueuing');
@@ -9,7 +10,7 @@ const mysqlConfig = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
 };
 
 exports.account_actions = (socket) => {
@@ -28,7 +29,7 @@ exports.account_actions = (socket) => {
                 throw err;
             }
 
-            const emailExistsQuery = con.format("SELECT * FROM Users WHERE EMAIL=? LIMIT 1;", [email]);
+            const emailExistsQuery = con.format("SELECT * FROM users WHERE EMAIL=? LIMIT 1;", [email]);
 
             con.query(emailExistsQuery, (err, result, fields) => {
                 if (err) {
@@ -40,7 +41,7 @@ exports.account_actions = (socket) => {
                     socket.emit('register-failed', "Register failed. Email already exists.");
                     con.end();
                 } else {
-                    const registerInsertQuery = con.format("INSERT INTO Users (EMAIL, USERNAME, PASSWORD) VALUES (?, ?, ?);", [email, username, password]);
+                    const registerInsertQuery = con.format("INSERT INTO users (EMAIL, USERNAME, PASSWORD) VALUES (?, ?, ?);", [email, username, password]);
 
                     con.query(registerInsertQuery, (err, result) => {
                         if (err) {
@@ -79,7 +80,7 @@ exports.account_actions = (socket) => {
                 throw err;
             }
 
-            const loginCheckQuery = con.format("SELECT * FROM Users WHERE EMAIL=? AND PASSWORD=? LIMIT 1;", [email, password]);
+            const loginCheckQuery = con.format("SELECT * FROM users WHERE EMAIL=? AND PASSWORD=? LIMIT 1;", [email, password]);
 
             con.query(loginCheckQuery, (err, result, fields) => {
                 if (err) {
