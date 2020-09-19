@@ -1,6 +1,5 @@
-const {Match} = require('./match');
-const User = require('./user');
 const utils = require('./utils');
+const {Match} = require('./match');
 
 const quickMatchQueue = [];
 const matches = [];

@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const {sendQuery} = require('./dbActions');
 
 class Match {
     constructor(roomId, user0, user1, onEnd) {
@@ -56,12 +57,38 @@ class Match {
         this.user1.socket.join(this.roomId);
     }
 
+    incWins(userData) {
+        const incWinsRes = sendQuery("UPDATE users set WINS=WINS+1 WHERE EMAIL=?;", [userData['email']]);
+        incWinsRes.then((res) => {
+            console.log(res);
+        });
+    }
+
+    incLosses(userData) {
+        const incLossesRes = sendQuery("UPDATE users set LOSSES=LOSSES+1 WHERE EMAIL=?;", [userData['email']]);
+        incLossesRes.then((res) => {
+            console.log(res);
+        });
+    }
+
     gameEvents() {
         this.user0.socket.on('joined-game', () => {
             this.playerJoined();
         });
+        
         this.user1.socket.on('joined-game', () => {
             this.playerJoined();
+        });
+
+
+        this.user0.socket.on('won-game', () => {
+            this.incWins(this.user0.userData);
+            this.incLosses(this.user1.userData);
+        });
+        
+        this.user1.socket.on('won-game', () => {
+            this.incWins(this.user1.userData);
+            this.incLosses(this.user0.userData);
         });
 
 

@@ -22,6 +22,7 @@ class User {
     get userData() {
         return {
             'username': this.username,
+            'email': this.email,
             'avatar': utils.generateUserAvatar(this.email).toString('base64')
         }
     };
