@@ -59,16 +59,10 @@ class Match {
 
     incWins(userData) {
         const incWinsRes = sendQuery("UPDATE users set WINS=WINS+1 WHERE EMAIL=?;", [userData['email']]);
-        incWinsRes.then((res) => {
-            console.log(res);
-        });
     }
 
     incLosses(userData) {
         const incLossesRes = sendQuery("UPDATE users set LOSSES=LOSSES+1 WHERE EMAIL=?;", [userData['email']]);
-        incLossesRes.then((res) => {
-            console.log(res);
-        });
     }
 
     gameEvents() {
