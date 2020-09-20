@@ -1,5 +1,6 @@
 const utils = require('./utils');
 const {findQuickMatch, removeFromQueue} = require('./matchQueuing');
+const {sendQuery} = require('./dbActions');
 
 const usernameKey = 'USERNAME';
 const emailKey = 'EMAIL';
@@ -35,11 +36,19 @@ class User {
         });
 
         this.socket.on('get-wins-losses',  () => {
-            let data = {
-                'wins': this.wins,
-                'losses': this.losses
-            }
-            this.socket.emit('update-wins-losses', data);
+            const winsLossesRes = sendQuery("SELECT WINS,LOSSES FROM users WHERE EMAIL=? LIMIT 1;", [this.email]);
+
+            winsLossesRes.then((res) => {
+                res = res[0];
+                this.wins = res['WINS'];
+                this.losses = res['LOSSES'];
+
+                let data = {
+                    'wins': this.wins,
+                    'losses': this.losses
+                }
+                this.socket.emit('update-wins-losses', data);
+            });
         });
 
         this.socket.on('quick-match', () => {
